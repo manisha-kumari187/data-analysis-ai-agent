@@ -1,4 +1,4 @@
-# 📊 Data Analytics AI Agent (n8n)
+# 📊 Data Analytics AI Agent 
 
 An n8n-powered conversational AI agent that reads data from Google Sheets, analyzes it on request, and can email professional HTML reports via Gmail — all through a simple chat interface.
 
