@@ -74,10 +74,3 @@ data-analytics-ai-agent/
 └── docs/
 ```
 
-## 📄 License
-
-This project is licensed under the MIT License — see [LICENSE](./LICENSE) for details.
-
-## ⚠️ Note
-
-The exported workflow JSON does **not** contain any credentials (API keys, OAuth tokens). You must connect your own OpenAI, Google Sheets, and Gmail credentials after importing.
