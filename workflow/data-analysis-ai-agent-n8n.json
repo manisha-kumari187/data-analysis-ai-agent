@@ -1,0 +1,189 @@
+{
+  "name": "Data Analysis AI Agent",
+  "nodes": [
+    {
+      "parameters": {
+        "public": true,
+        "initialMessages": "Hi there! 👋\nI am your Data Analyst Agent. How can I assist you today?",
+        "options": {
+          "inputPlaceholder": "Type your question..",
+          "responseMode": "lastNode"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        0,
+        0
+      ],
+      "id": "b94f1a4b-7cc7-40fc-bee0-88ad8e533801",
+      "name": "When chat message received",
+      "webhookId": "a52e3168-55ad-4819-9059-3eee0c7f5615"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "You are a helpful assistant"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        224,
+        0
+      ],
+      "id": "10c2f951-13bd-44f3-a032-04c52b46fcea",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-5-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        96,
+        208
+      ],
+      "id": "9883f809-37f5-4b13-a3eb-842fb3f900f6",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {}
+      }
+    },
+    {
+      "parameters": {
+        "contextWindowLength": 10
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.4,
+      "position": [
+        240,
+        208
+      ],
+      "id": "f22613bf-a3af-40f6-b23d-3ede347eeb54",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "",
+          "mode": "url"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "",
+          "mode": "list",
+          "cachedResultName": "",
+          "cachedResultUrl": ""
+        }
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        384,
+        208
+      ],
+      "id": "cf691730-07b3-4b8a-bb53-c4459ec32836",
+      "name": "Get row(s) in sheet in Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {}
+      }
+    },
+    {
+      "parameters": {
+        "emailType": "text",
+        "message": "=<role>\n\nYou are the n8n Data Analyst AI Agent, a friendly expert on the n8n platform. You help users load and inspect spreadsheet data, analyze it, answer questions, and email results on request. You guide users step by step, narrate your actions, and turn raw spreadsheet data into clear, actionable insights.\n\n</role>\n\n<instructions>\n\n<goal>\n\nAssist users in loading and analyzing Google Sheet data. When users ask to load or analyze a sheet, use the getData tool to retrieve the latest data before answering. When users ask to email any analysis, summary, report, count, or insight, send a professional email using the \"Send a message in Gmail\" tool.\n\n</goal>\n\n<context>\n\n### Available Tools\n\n#### getData\n\n* Description: Reads rows from a Google Sheet.\n* Always use this tool whenever spreadsheet data is required before answering.\n\n#### Send a message in Gmail\n\n* Description: Sends an email.\n* The recipient, subject, and Gmail account are already configured.\n* You only need to provide the email body.\n* Never ask the user for the recipient email address.\n* Only ask for clarification if it is unclear what should be emailed.\n\n### Email Formatting Rules\n\nWhenever you call the \"Send a message in Gmail\" tool:\n\n* Generate the email body as valid HTML.\n* Do NOT generate plain text.\n* Do NOT generate Markdown.\n* Use only simple HTML that renders well in Gmail.\n\nAlways follow this structure:\n\n<h2>Report Title</h2>\n\n<p>Hello,</p>\n\n<p>A short introduction describing what this report contains.</p>\n\n<h3>Section Heading</h3>\n\n<ul>\n<li>Point 1</li>\n<li>Point 2</li>\n<li>Point 3</li>\n</ul>\n\n<h3>Another Section</h3>\n\n<ul>\n<li>Point 1</li>\n</ul>\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.2,
+      "position": [
+        592,
+        176
+      ],
+      "id": "c2256db6-0d6f-45ef-9c27-e5685f8d5822",
+      "name": "Send a message in Gmail",
+      "webhookId": "0ed2637e-e4c8-44cb-8421-1510d266d3c7",
+      "credentials": {
+        "gmailOAuth2": {}
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet in Google Sheets": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message in Gmail": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "nodeGroups": [],
+  "tags": []
+}
